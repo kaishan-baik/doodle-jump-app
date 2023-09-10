@@ -15,8 +15,8 @@ let doodlerLeftImg;
 // game physics
 let velocityX = 0;
 let velocityY = 0; // doodler jump speed
-let initialVelocityY = -3; // starting velocity Y
-let gravity = 0.06;
+let initialVelocityY = -4; // starting velocity Y
+let gravity = 0.1;
 
 let doodler = {
   img: null,
@@ -321,11 +321,11 @@ function moveDoodler(e) {
 
 function moveDoodlerWithMouse(e) {
   if (e.offsetX > boardWidth / 2) {
-    velocityX = 2;
+    velocityX = 4;
     doodler.img = doodlerRightImg;
     // console.log("This is the right side of the board. X=" + e.offsetX);
   } else {
-    velocityX = -2;
+    velocityX = -4;
     doodler.img = doodlerLeftImg;
     // console.log("This is the left side of the board. X=" + e.offsetX);
   }
