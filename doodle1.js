@@ -56,6 +56,12 @@ let buttonWidth = 130;
 let buttonHeight = 45;
 let buttonText = "Start Game!";
 
+let endButtonX = 100;
+let endButtonY = 450;
+let endButtonWidth = 150;
+let endButtonHeight = 45;
+let endButtonText = "Restart Game!";
+
 window.onload = function () {
   board = document.getElementById("board");
   board.height = boardHeight;
@@ -81,6 +87,7 @@ window.onload = function () {
   placePlatforms();
   requestAnimationFrame(update);
   document.addEventListener("keydown", moveDoodler);
+  document.addEventListener("click", restartGameButton);
 };
 
 function drawDoodler() {
@@ -207,31 +214,34 @@ function update() {
 function showScore() {
   if (gameStart) {
     context.fillStyle = "black";
-    context.font = "16px sans-serif";
+    context.font = "16px Arial";
     context.fillText("Score: " + score, 5, 20);
     context.fillText("Highscore: " + maxScore, 220, 20);
     context.fillText("Level: " + level, 110, 20);
   }
   if (gameOver) {
     context.fillStyle = "black";
-    context.font = "20px sans-serif";
+    context.font = "20px Arial";
     context.fillText("Your Score", 50, 100);
 
-    context.font = "30px sans-serif";
+    context.font = "30px Arial";
     context.fillText(score, boardWidth / 2 - 15, 150);
 
-    context.font = "20px sans-serif";
+    context.font = "20px Arial";
     context.fillText("Highscore", 50, 220);
 
-    context.font = "30px sans-serif";
+    context.font = "30px Arial";
     context.fillText(maxScore, boardWidth / 2 - 15, 270);
 
-    context.font = "16px sans-serif";
+    context.font = "16px Arial";
     context.fillText(
       'Game Over: Press "Space" to Restart ',
       boardWidth / 7,
-      (boardHeight * 7) / 8
+      (boardHeight * 5) / 8
     );
+
+    context.fillText("OR", boardWidth / 2 - 5, (boardHeight * 5) / 8 + 50);
+    drawRestartGameButton();
   }
 }
 
@@ -362,5 +372,41 @@ function startGameButton(e) {
   ) {
     startingPage = false;
     gameStart = true;
+  }
+}
+
+function drawRestartGameButton() {
+  context.fillStyle = "red";
+  context.fillRect(endButtonX, endButtonY, endButtonWidth, endButtonHeight);
+
+  context.fillStyle = "white";
+  context.font = "20px Arial";
+  context.fillText(endButtonText, endButtonX + 12, endButtonY + 30);
+}
+
+function restartGameButton(e) {
+  let mouseX = e.offsetX;
+  let mouseY = e.offsetY;
+
+  if (
+    mouseX >= endButtonX &&
+    mouseX <= endButtonX + endButtonWidth &&
+    mouseY >= endButtonY &&
+    mouseY <= endButtonY + endButtonHeight &&
+    gameOver
+  ) {
+    doodler = {
+      img: doodlerRightImg,
+      x: doodlerX,
+      y: doodlerY,
+      width: doodlerWidth,
+      height: doodlerHeight,
+    };
+    velocityX = 0;
+    velocityY = initialVelocityY;
+    score = 0;
+    gameOver = false;
+    gameStart = true;
+    placePlatforms();
   }
 }
