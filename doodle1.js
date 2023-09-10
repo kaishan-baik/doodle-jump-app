@@ -49,15 +49,18 @@ let gameOver = false;
 let level = 0;
 let threshold;
 
-// threshold = Math.floor(score / 10);
-// if (threshold > level) {
-//   level += 1;
-// }
+// touch controls
+let buttonX = 110;
+let buttonY = 380;
+let buttonWidth = 130;
+let buttonHeight = 45;
+let buttonText = "Start Game!";
 
 window.onload = function () {
   board = document.getElementById("board");
   board.height = boardHeight;
   board.width = boardWidth;
+  board.addEventListener("click", moveDoodlerWithMouse);
 
   context = board.getContext("2d");
   drawDoodler();
@@ -68,8 +71,12 @@ window.onload = function () {
   if (startingPage) {
     loadStartPage();
     document.addEventListener("keydown", startGame);
+    drawStartGameButton();
+
+    document.addEventListener("click", startGameButton);
     requestAnimationFrame(startGame);
   }
+
   getHighScore();
   placePlatforms();
   requestAnimationFrame(update);
@@ -107,11 +114,17 @@ function getHighScore() {
 function loadStartPage() {
   context.fillStyle = "red";
   context.font = "40px Calibri";
-  context.fillText("doodle jump!", 75, 150);
+  context.fillText("doodle jump!", 75, 120);
 
   context.fillStyle = "black";
   context.font = "20px sans-serif";
-  context.fillText('Press "Enter" to start the game', 40, 350);
+  context.fillText('Press "Enter" to start the game', 40, 280);
+
+  context.fillStyle = "red";
+  context.fillText("OR", 165, 320);
+
+  context.fillStyle = "black";
+  context.fillText("Click the button below!", 70, 355);
 }
 
 function startGame(e) {
@@ -123,6 +136,7 @@ function startGame(e) {
 
 function update() {
   requestAnimationFrame(update);
+  //   getMouseCoordinates();
 
   if (gameStart) {
     // doodler
@@ -295,6 +309,18 @@ function moveDoodler(e) {
   }
 }
 
+function moveDoodlerWithMouse(e) {
+  if (e.offsetX > boardWidth / 2) {
+    velocityX = 2;
+    doodler.img = doodlerRightImg;
+    // console.log("This is the right side of the board. X=" + e.offsetX);
+  } else {
+    velocityX = -2;
+    doodler.img = doodlerLeftImg;
+    // console.log("This is the left side of the board. X=" + e.offsetX);
+  }
+}
+
 function detectCollision(a, b) {
   return (
     // when a's top left doesn't reach b's top right corner
@@ -312,5 +338,29 @@ function increaseDifficulty() {
   let threshold = Math.floor(score / 10);
   if (threshold > level) {
     level = threshold;
+  }
+}
+
+function drawStartGameButton() {
+  context.fillStyle = "rgb(107, 186, 76)";
+  context.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  context.fillStyle = "white";
+  context.font = "20px Arial";
+  context.fillText(buttonText, buttonX + 12, buttonY + 30);
+}
+
+function startGameButton(e) {
+  let mouseX = e.offsetX;
+  let mouseY = e.offsetY;
+
+  if (
+    mouseX >= buttonX &&
+    mouseX <= buttonX + buttonWidth &&
+    mouseY >= buttonY &&
+    mouseY <= buttonY + buttonHeight
+  ) {
+    startingPage = false;
+    gameStart = true;
   }
 }
